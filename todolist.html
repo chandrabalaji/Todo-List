@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body>
+    <div id="wrap">
+      <h2>Todo list</h2>
+      <input type="text" id="input" />
+      <button id="add">Add</button>
+      <div id="todolist">
+        <span id="items">List Items</span>
+      </div>
+    </div>
+
+    <script>
+      let btn = document.getElementById("add");
+      let todolist = document.getElementById("todolist");
+      let input = document.getElementById("input");
+      // local storage
+      let todos = [];
+      window.onload = () => {
+        todos = JSON.parse(localStorage.getItem("todos")) || [];
+        todos.forEach((todo) => {
+          addtodo(todo);
+        });
+      };
+      btn.addEventListener("click", () => {
+        todos.push(input.value);
+        localStorage.setItem("todos", JSON.stringify(todos));
+        addtodo(input.value);
+        input.value = "";
+      });
+
+      function addtodo(todo) {
+        let para = document.createElement("p");
+        para.innerText = todo;
+        todolist.appendChild(para);
+
+        para.addEventListener("click", () => {
+          para.style.textDecoration = "line-through";
+          remove(todo);
+        });
+        para.addEventListener("dblclick", () => {
+          todolist.removeChild(para);
+          remove(todo);
+        });
+      }
+
+      function remove(todo) {
+        let index = todos.indexOf(todo);
+        if (index > -1) todos.splice(index, 1);
+
+        localStorage.setItem("todos", JSON.stringify(todos));
+      }
+    </script>
+  </body>
+</html>
